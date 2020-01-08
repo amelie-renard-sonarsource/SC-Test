@@ -28,7 +28,8 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      build-wrapper/build-wrapper-win-x86-64.exe --out-dir bw_output MSBuild.exe /t:Rebuild
+      dir
+      build-wrapper-win-x86-64.exe --out-dir bw_output MSBuild.exe /t:Rebuild
 
 - task: MSBuild@1
   inputs:
