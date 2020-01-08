@@ -22,16 +22,14 @@ steps:
 - task: SonarQubePrepare@4
   inputs:
     SonarQube: 'MyProjectServiceConnection'
-    scannerMode: 'MSBuild'
-    projectKey: 'test:azureProject'
-    projectName: 'test:azureProject'
-    extraProperties: 'sonar.cfamily.build-wrapper-output=bw_output'
+    scannerMode: 'CLI'
+    configMode: 'file'
 
 - powershell: .\my-script.ps1
 
 - task: CmdLine@2
   inputs:
     script: |
-      build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir bw_output "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" /t:Rebuild
+      build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir build_wrapper_output_directory "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" /t:Rebuild
 
 - task: SonarQubeAnalyze@4
