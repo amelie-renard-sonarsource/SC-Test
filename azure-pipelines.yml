@@ -15,6 +15,10 @@ steps:
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
 
+- task: MSBuild@1
+  inputs:
+    solution: '**/*.sln'
+
 - task: SonarQubePrepare@4
   inputs:
     SonarQube: 'MyProjectServiceConnection'
@@ -31,9 +35,5 @@ steps:
       dir
       MSBuild.exe -h
       build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir bw_output MSBuild.exe /t:Rebuild
-
-- task: MSBuild@1
-  inputs:
-    solution: '**/*.sln'
 
 - task: SonarQubeAnalyze@4
