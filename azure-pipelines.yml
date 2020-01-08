@@ -33,3 +33,7 @@ steps:
       build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir build_wrapper_output_directory "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" /t:Rebuild
 
 - task: SonarQubeAnalyze@4
+
+- task: SonarQubePublish@4
+  inputs:
+    pollingTimeoutSec: '300'
