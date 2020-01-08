@@ -1,7 +1,4 @@
 # Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
 
 trigger:
 - master
@@ -13,9 +10,28 @@ steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
   
-- powershell: .\my-script.ps1
-
 - script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+- task: SonarQubePrepare@4
+  inputs:
+    SonarQube: 'MyProjectServiceConnection'
+    scannerMode: 'MSBuild'
+    projectKey: 'test:azureProject'
+    projectName: 'test:azureProject'
+    extraProperties: 'sonar.cfamily.build-wrapper-output=bw_output'
+
+- powershell: .\my-script.ps1
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      build-wrapper-win-x86-64.exe --out-dir bw_output MSBuild.exe /t:Rebuild
+
+- task: MSBuild@1
+  inputs:
+    solution: '**/*.sln'
+
+- task: SonarQubeAnalyze@4
