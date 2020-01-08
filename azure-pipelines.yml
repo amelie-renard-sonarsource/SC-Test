@@ -32,8 +32,6 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      dir
-      MSBuild.exe -h
-      build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir bw_output MSBuild.exe /t:Rebuild
+      build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir bw_output "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" /t:Rebuild
 
 - task: SonarQubeAnalyze@4
