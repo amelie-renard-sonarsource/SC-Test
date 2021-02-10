@@ -9,7 +9,7 @@ pool:
 steps:
 - task: SonarQubePrepare@4
   inputs:
-    SonarQube: 'MyProjectServiceConnection'
+    SonarQube: 'SQLocal'
     scannerMode: 'CLI'
     configMode: 'file'
 
