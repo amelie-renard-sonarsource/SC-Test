@@ -7,6 +7,10 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: MSBuild@1
+  inputs:
+    solution: '**/*.sln'
+
 - task: SonarQubePrepare@4
   inputs:
     SonarQube: 'SQLocal'
