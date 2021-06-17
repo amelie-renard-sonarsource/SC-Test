@@ -1,28 +1,34 @@
-# Starter pipeline
-
 trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
+  
+variables:
+  BUILD_WRAPPER_DOWNLOAD_URL: https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
 
-steps:
-
-- task: SonarQubePrepare@4
+- task: SonarCloudPrepare@1
   inputs:
-    SonarQube: 'SQLocal'
+    SonarCloud: 'sc-azure'
+    organization: 'amelierenard-1'
     scannerMode: 'CLI'
     configMode: 'file'
+    cliProjectKey: 'amelierenard_SC-Test'
+    cliProjectName: 'SC-Test'
+    cliSources: 'src'
 
-- powershell: .\my-script.ps1
+- bash: |
+      mkdir -p $HOME/.sonar
+      curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{variables.BUILD_WRAPPER_DOWNLOAD_URL}}
+      unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
+    displayName: Download and install build wrapper
 
-- task: CmdLine@2
-  inputs:
-    script: |
-      build-wrapper-win-x86\build-wrapper-win-x86-64.exe --out-dir build_wrapper_output_directory "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\msbuild.exe" /t:Rebuild
+- bash: |
+      mkdir build
+      cmake -S . -B build
+      export PATH=$HOME/.sonar/build-wrapper-linux-x86:$PATH
+      build-wrapper-linux-x86-64 --out-dir build_wrapper_output_directory cmake --build build/ --config Release
+    workingDirectory: .
+    displayName: Build in build-wrapper
 
-- task: SonarQubeAnalyze@4
-
-- task: SonarQubePublish@4
-  inputs:
-    pollingTimeoutSec: '300'
+- task: SonarCloudAnalyze@1
